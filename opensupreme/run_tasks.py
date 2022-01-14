@@ -109,6 +109,13 @@ def run_task(session, positive_keywords, negative_keywords, category, size, colo
 
         start_checkout_time = time.time()
         item_id, size_id, style_id, atc_chk = return_item_ids(session, positive_keywords, negative_keywords, category, size, color, task_name, screenlock)
+        
+        ## Steven Checkpoint
+        print("Item ID:",item_id, "  Size ID:",size_id, "  Style ID: ", style_id, "  ATC", atc_chk)
+        
+        ## End of Steven Code
+        
+        
         session, atc_time = add_to_cart(session, item_id, size_id, style_id, atc_chk, task_name, screenlock)
 
         if atc_time is not None and checkout(session, profile_data, delay, atc_time, task_name, start_checkout_time, screenlock):

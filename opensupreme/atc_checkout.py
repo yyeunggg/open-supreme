@@ -3,6 +3,7 @@ import time
 import requests
 from termcolor import colored
 from .get_params import get_params
+from bs4 import BeautifulSoup
 
 def add_to_cart(session, item_id, size_id, style_id, atc_chk, task_name, screenlock):
     """
@@ -12,6 +13,9 @@ def add_to_cart(session, item_id, size_id, style_id, atc_chk, task_name, screenl
     Returns:
         requests.Session, float/None: Our requests.session along with the ATC timestamp if successful
     """
+    
+    headers_token = {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/80.0.3987.95 Mobile/15E148 Safari/604.1'
+                     }
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/80.0.3987.95 Mobile/15E148 Safari/604.1',
@@ -27,16 +31,30 @@ def add_to_cart(session, item_id, size_id, style_id, atc_chk, task_name, screenl
         'Cache-Control': 'no-cache',
         'TE': 'Trailers',
     }
+
+
+    ## Steven Code    
     data = {
-        "s": size_id,
-        "st": style_id,
-        "qty": "1",
-        "chk": atc_chk
-    }
-    atc_url = f"https://www.supremenewyork.com/shop/{item_id}/add.json"
+        "style": style_id,
+        "size": size_id,
+        "chk": atc_chk,
+        "qty": 1
+        }
+
+    atc_url = f"https://www.supremenewyork.com/shop/{item_id}/atc.json"
+    
+    ## End
 
     while True: # keep making checkout post until 200 response
         atc_response = session.post(atc_url, headers=headers, data=data)
+        
+        ## Steven Code
+        print("ATC url: ", atc_url)
+        print("ATC response:",atc_response)
+        print("ATC content:",atc_response.content)
+        ## End
+        
+        
         if atc_response.status_code == 200:
             break
         session.event.wait(timeout=1.25)
